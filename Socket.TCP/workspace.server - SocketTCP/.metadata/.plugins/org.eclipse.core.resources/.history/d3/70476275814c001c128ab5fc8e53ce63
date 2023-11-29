@@ -1,0 +1,54 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class ChatServer 
+{
+	
+	private static final int porta = 4000;
+	ServerSocket serverSocket; // = new ServerSocket(porta);
+	//Socket conectar;
+	
+	public void iniciar() throws IOException
+	{
+		serverSocket = new ServerSocket(porta);
+		
+		System.out.println("-- Servidor em execução | Porta: " + porta + " --");
+		
+		esperarConexão();
+	}
+	
+	public void esperarConexão() throws IOException
+	{
+		while(true)
+		{
+			Socket clientSocket = serverSocket.accept();
+			System.out.println(clientSocket.getRemoteSocketAddress() + " conectado");
+			
+			//BufferedWriter in = new BufferedWriter(new InputStreamReader(serverSocket.getInputStream()));
+			BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+			String msg = in.readLine();
+			System.out.println("mensagem recebida de" + clientSocket.getRemoteSocketAddress() + msg);
+			
+			
+		}
+	}
+	
+	public static void main(String[] args)
+	{
+		ChatServer servidor = new ChatServer();
+		try {
+			servidor.iniciar();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		System.out.println("-- Servidor encerrado --");
+		
+	}
+
+}

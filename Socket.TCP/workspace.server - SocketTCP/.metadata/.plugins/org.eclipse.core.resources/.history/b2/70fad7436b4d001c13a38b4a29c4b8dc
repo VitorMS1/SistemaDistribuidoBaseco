@@ -1,0 +1,65 @@
+import java.io.*;
+import java.net.*;
+
+public class ChatServer 
+{
+	
+	private static final int porta = 4000;
+	ServerSocket serverSocket;
+	
+	public void iniciar() throws IOException
+	{
+		serverSocket = new ServerSocket(porta);
+		
+		System.out.println("-- Servidor em execução | Porta: " + porta + " --");
+		System.out.println("********************************************\n");
+		conexãoLoop();
+	}
+	
+	public void conexãoLoop() throws IOException
+	{
+		while(true)
+		{
+			SocketCliente socketCliente = new SocketCliente(serverSocket.accept());
+						
+			new Thread(() -> receberMensagemLoop(socketCliente)).start();
+		
+		}
+	}
+	
+	public void receberMensagemLoop(SocketCliente socketCliente)
+	{
+		String msg;
+		try
+		{
+			while ((msg = socketCliente.ReceberMensagem()) != null) 
+			{
+				if ("sair".equalsIgnoreCase(msg)) 
+				{  return; }
+				System.out.printf("%s: %s\n", socketCliente.getRemoteSocketAddress(), msg);
+			}
+		} 
+		finally
+		{
+			socketCliente.fechar();
+		}
+		
+	}
+	
+	
+	public static void main(String[] args)
+	{
+		ChatServer servidor = new ChatServer();
+		try 
+		{
+			servidor.iniciar();
+		} 
+		catch (IOException e) 
+		{
+			e.printStackTrace();
+		}
+		
+		System.out.println("-- Servidor encerrado --");
+	}
+	
+}

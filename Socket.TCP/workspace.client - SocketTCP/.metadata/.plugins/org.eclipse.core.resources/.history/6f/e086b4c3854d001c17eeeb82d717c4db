@@ -1,0 +1,36 @@
+import java.io.IOException;
+import java.util.Scanner;
+
+public class Main
+{
+
+	public static void main(String[] args) 
+	{
+		
+		//String nome;
+		
+		try 
+		  {
+			 Scanner scan = new Scanner(System.in);
+			 ChatClient cliente = new ChatClient();
+			 
+			 System.out.println("-------- CHAT --------\n*******"
+			 + "***************");
+			 
+			 System.out.print("Digite seu nome: ");
+			 cliente.nome = scan.nextLine();
+			  
+			 cliente.iniciar();	
+		  } 
+		  
+		catch (IOException e)
+		{ System.out.println("ERRO:" + e.getMessage());}
+		
+		  
+		System.out.println("Sistema finalizado");
+
+	}
+	
+}
+
+

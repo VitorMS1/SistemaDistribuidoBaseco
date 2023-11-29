@@ -1,0 +1,101 @@
+import java.io.*;
+import java.net.Socket;
+import java.util.Scanner;
+
+
+public class ChatClient implements Runnable
+{
+	String EnderecoServidor = "localhost";
+	Sockets socketCliente;
+	Scanner scan;
+	String nome;
+	
+	//SocketCliente socketCliente;
+	
+//====================================================================================  
+
+	public ChatClient() 
+	{
+		scan = new Scanner(System.in);
+	}
+	
+//====================================================================================  
+
+	
+	 public void iniciar() throws IOException 
+	 {
+		 
+		 try 
+		 {
+			 // socketCliente = new SocketCliente(clientSocket);
+			 socketCliente = new Sockets(new Socket (EnderecoServidor, 4000));
+
+			 new Thread(this).start();
+			 menssagem();
+			
+		}
+		 
+		finally 
+		{
+			socketCliente.fechar();
+		}
+	  }
+	 
+//-----------------------------------------------------------------------
+	 
+	  private void menssagem() throws IOException
+	  {
+		  String msg;
+		  
+		  do
+		  {
+			System.out.print("Eu: ");
+			msg = nome + ": " + scan.nextLine();
+			socketCliente.EniviarMensagem(msg);
+		  } 
+		  while (!msg.equalsIgnoreCase("sair"));
+	  }
+	
+//-----------------------------------------------------------------------
+ 
+	  
+	  @Override
+	  public void run() 
+	  {
+		  String msg;
+		  
+		  while ((msg = socketCliente.ReceberMensagem()) != null) 
+		  {
+			  System.out.printf("%s \n", msg);
+		  }
+		  
+	  }
+		  
+		  
+//====================================================================================  
+		  
+	  
+	/*  public static void main(String[] args) 
+	  {
+		  try 
+		  {
+			 Scanner scan = new Scanner(System.in);
+			 ChatClient cliente = new ChatClient();
+			 
+			 System.out.println("-------- CHAT --------\n*******"
+			 + "***************");
+			 
+			 System.out.print("Digite seu nome: ");
+			 cliente.nome = scan.nextLine();
+			  
+			 cliente.iniciar();	
+		  } 
+		  
+		catch (IOException e)
+		{ System.out.println("ERRO:" + e.getMessage());}
+		
+		  
+		System.out.println("Sistema finalizado");
+
+	}*/
+}

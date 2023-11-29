@@ -1,0 +1,84 @@
+import java.io.*;
+import java.net.Socket;
+import java.util.Scanner;
+
+
+public class ChatClient 
+{
+	private static final String EnderecoServidor = "localhost";
+	private static Socket clientSocket;
+	private Scanner scan;
+	private PrintWriter saida;
+		
+	public ChatClient() 
+	{
+		scan = new Scanner(System.in);
+	}
+	
+	 public void iniciar() throws IOException 
+	 {
+		 clientSocket = new Socket(EnderecoServidor, 4000); 
+		 SocketCliente socketCliente = new SocketCliente(clientSocket);
+		 //socketCliente.SocketCliente();
+		 
+		 
+		 
+		  
+		 System.out.println("conectado ao servidor: " + EnderecoServidor);
+		 menssagem();
+	  }
+	 
+	  private void menssagem() throws IOException
+	  {
+		  String msg;
+		  
+		  do
+		  {
+			System.out.print("Digite a menssagen: ");
+			msg = scan.nextLine();
+			saida.println(msg);
+		  } 
+		  while (!msg.equalsIgnoreCase("sair"));
+	  }
+	
+	  public static void main(String[] args) 
+	  {
+		  try 
+		  {
+			ChatClient cliente = new ChatClient();
+			cliente.iniciar();
+			
+		/*	Socket clientSocket = new Socket("localhost", 4000);
+			
+			
+			Scanner teclado = new Scanner(System.in);
+			Scanner chegada = new Scanner(clientSocket.getInputStream());	
+			PrintStream saida = new PrintStream(clientSocket.getOutputStream());	
+			
+			String msg = "";
+			
+			do 
+			{
+				System.out.println("Informe a mensagen");
+				msg = teclado.nextLine();
+				saida.println(msg);
+				
+				String resposta = chegada.nextLine();
+				System.out.println("A resposta da mensagen: " + msg );
+				System.out.println("-//-");
+			}
+			while (msg.length() != 0);
+			
+			clientSocket.close();
+			*/
+		} 
+		catch (IOException e)
+		{
+			System.out.println("ERRO:" + e.getMessage());
+		}
+		
+		System.out.println("Sistema finalizado");
+		
+	}
+
+}

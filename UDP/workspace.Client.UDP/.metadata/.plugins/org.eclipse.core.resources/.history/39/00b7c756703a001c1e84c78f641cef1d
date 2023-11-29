@@ -1,0 +1,22 @@
+import java.util.Scanner;
+
+public class Main {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		Scanner scan = new Scanner(System.in);
+		Medida medida = new Medida();
+		Client_UDP cliente_UDP = new Client_UDP();
+		
+		medida.setKmh(1.609);
+		System.out.println("Digite o valor em Milhas por hora para ser convertido:");
+		medida.setMph(scan.nextDouble());
+		
+		medida = cliente_UDP.sendData(medida);
+		
+		System.out.println(medida.getMph() + "Mph convertidas, são: " + medida.getValorConvertido() + "Km/h");
+		
+	}
+
+}

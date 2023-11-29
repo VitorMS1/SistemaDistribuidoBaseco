@@ -1,0 +1,100 @@
+import java.io.*;
+import java.net.*;
+import java.util.*;
+
+public class ChatServer 
+{
+	
+	ServerSocket serverSocket;
+	List<SocketCliente> usuarios = new LinkedList<>();
+	int porta = 4000;
+	
+	
+//====================================================================================  
+
+	public void iniciar() throws IOException
+	{
+		serverSocket = new ServerSocket(porta);
+		
+		System.out.println("-- Servidor em execução | Porta: " + porta + " --");
+		System.out.println("********************************************\n");
+		conexãoLoop();
+	}
+	
+//--------------------------------------------------------------------------------
+
+	
+	private void conexãoLoop() throws IOException
+	{
+		while(true)
+		{
+			SocketCliente socketCliente = new SocketCliente(serverSocket.accept());
+			usuarios.add(socketCliente);
+						
+			new Thread(() -> receberMensagemLoop(socketCliente)).start();
+		}
+	}
+	
+//--------------------------------------------------------------------------------
+
+	
+	private void receberMensagemLoop(SocketCliente socketCliente)
+	{
+		String msg;
+		
+		try
+		{
+			while ((msg = socketCliente.ReceberMensagem()) != null) 
+			{
+				if ("sair".equalsIgnoreCase(msg)) 
+				{  return; }
+				
+				System.out.printf("%s - %s\n", socketCliente.getRemoteSocketAddress(), msg);
+				DevolverMensagem(socketCliente, msg);
+			}
+		} 
+		
+		finally
+		{ socketCliente.fechar();}
+	}
+	
+	
+//--------------------------------------------------------------------------------
+	
+	private void DevolverMensagem(SocketCliente emissor, String msg)
+	{
+		Iterator<SocketCliente> iterator = usuarios.iterator();
+		while (iterator.hasNext())
+		{
+			SocketCliente socketCliente = iterator.next();
+			if (!emissor.equals(socketCliente))
+			{
+				if (!socketCliente.EniviarMensagem(msg))
+				{
+					iterator.remove();
+				}
+				//socketCliente.EniviarMensagem(msg);				
+			}
+		}
+	}
+	
+	
+//====================================================================================  
+
+	
+	public static void main(String[] args)
+	{
+		ChatServer servidor = new ChatServer();
+		try 
+		{
+			servidor.iniciar();
+		} 
+		catch (IOException e) 
+		{
+			e.printStackTrace();
+		}
+		
+		System.out.println("-- Servidor encerrado --");
+	}
+	
+}

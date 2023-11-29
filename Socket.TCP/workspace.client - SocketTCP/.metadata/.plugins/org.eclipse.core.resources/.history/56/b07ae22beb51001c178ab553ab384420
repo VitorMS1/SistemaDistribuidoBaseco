@@ -1,0 +1,93 @@
+import java.io.*;
+import java.net.Socket;
+import java.util.Scanner;
+
+
+public class ChatClient implements Runnable
+{
+	String EnderecoServidor = "localhost";
+	Sockets socketCliente;
+	String mensagem;
+	Scanner scan;
+	String nome;
+	
+	//SocketCliente socketCliente;
+	
+//====================================================================================  
+
+	public ChatClient() 
+	{
+		scan = new Scanner(System.in);
+	}
+	
+//====================================================================================  
+
+	
+	 public void iniciar() throws IOException 
+	 {
+		 
+		 try 
+		 {
+			 // socketCliente = new SocketCliente(clientSocket);
+			 socketCliente = new Sockets(new Socket (EnderecoServidor, 4000));
+			 
+			 System.out.println("-Digite suas mensagens: ");
+			 
+			 new Thread(this).start();
+			 menssagem();
+			
+		}
+		 
+		finally 
+		{
+			socketCliente.fechar();
+		}
+		 
+	  }
+	 
+//-----------------------------------------------------------------------
+	 
+	  private void menssagem() throws IOException
+	  {
+		  
+		  do
+		  {
+			//System.out.print("Eu: ");
+			  mensagem = nome + ": " + scan.nextLine();
+			socketCliente.EniviarMensagem(mensagem);
+		  } 
+		  while (mensagem != (nome + ": sair"));
+	  }
+	
+//-----------------------------------------------------------------------
+ 
+	  
+	  @Override
+	  public void run() 
+	  {
+		  String mensagemRecebida;
+		  
+		  while ((mensagemRecebida = socketCliente.ReceberMensagem()) != null) 
+		  {
+			  if (mensagemRecebida != mensagem) 
+			  {
+				  System.out.printf("%s \n", mensagemRecebida);
+			  }
+			  
+		  }
+		  
+		  
+		/*  do
+		  {
+			  System.out.printf("%s \n", mensagem);
+		  }  
+		  while ((mensagemRecebida = socketCliente.ReceberMensagem()) != null);
+		  
+		  */
+		  
+	  }
+		  
+		  
+//====================================================================================  
+		  
+}

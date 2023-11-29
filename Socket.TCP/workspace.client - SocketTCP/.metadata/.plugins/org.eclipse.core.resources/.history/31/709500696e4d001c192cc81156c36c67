@@ -1,0 +1,90 @@
+import java.io.*;
+import java.net.Socket;
+import java.util.Scanner;
+
+
+public class ChatClient implements Runnable
+{
+	private static final String EnderecoServidor = "localhost";
+	private SocketCliente socketCliente;
+	private Scanner scan;
+	private String nome;
+	
+	//SocketCliente socketCliente;
+	
+//====================================================================================  
+
+	public ChatClient() 
+	{
+		scan = new Scanner(System.in);
+	}
+	
+//====================================================================================  
+
+	
+	 public void iniciar() throws IOException 
+	 {
+		 socketCliente = new SocketCliente(new Socket (EnderecoServidor, 4000));
+		 
+		// socketCliente = new SocketCliente(clientSocket);
+		 
+		 new Thread(this).start();
+		 menssagem();
+	  }
+	 
+//-----------------------------------------------------------------------
+	 
+	  private void menssagem() throws IOException
+	  {
+		  String msg;
+		  
+		  do
+		  {
+			System.out.print("Digite a menssagen: ");
+			msg = nome + ": " + scan.nextLine();
+			//enviar.println(msg);
+			socketCliente.EniviarMensagem(msg);
+		  } 
+		  while (!msg.equalsIgnoreCase("sair"));
+	  }
+	
+//-----------------------------------------------------------------------
+ 
+	  
+	  @Override
+	  public void run() 
+	  {
+		  String msg;
+		  
+		  while ((msg = socketCliente.ReceberMensagem()) != null) 
+		  {
+			  System.out.printf("%s \n", msg);
+		  }
+		  
+	  }
+		  
+		  
+//====================================================================================  
+		  
+	  
+	  public static void main(String[] args) 
+	  {
+		  try 
+		  {
+			 Scanner scan = new Scanner(System.in);
+			 ChatClient cliente = new ChatClient();
+			 
+			 System.out.print("Digite seu nome: ");
+			 cliente.nome = scan.nextLine();
+			  
+			 cliente.iniciar();	
+		  } 
+		  
+		catch (IOException e)
+		{ System.out.println("ERRO:" + e.getMessage());}
+		
+		  
+		System.out.println("Sistema finalizado");
+
+	}
+}

@@ -1,0 +1,54 @@
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+import com.sun.security.ntlm.Server;
+import com.sun.tools.javap.TryBlockWriter;
+
+public class ChatServer 
+{
+	
+	private static final int porta = 4000;
+	ServerSocket serverSocket; // = new ServerSocket(porta);
+	Socket conectar;
+	
+	public static void main(String[] args)
+	{
+		ChatServer servidor = new ChatServer();
+		try {
+			servidor.iniciar();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		System.out.println("-- Servidor encerrado --");
+		
+	}
+	
+	public void servidor()
+	{
+		
+	}
+	
+	
+	public void iniciar() throws IOException
+	{
+			System.out.println("-- Servidor em execução | Porta: " + porta + " --");
+		
+			serverSocket = new ServerSocket(porta);
+			esperarConexão();
+	}
+	
+	public void esperarConexão()
+	{
+		while(true)
+		{
+	
+				conectar = new Server.accept();
+				System.out.println(conectar.getRemoteSocketAddress() + " conectado");
+			
+		}
+	}
+
+}

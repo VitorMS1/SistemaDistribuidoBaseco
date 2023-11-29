@@ -1,0 +1,49 @@
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+
+public class Client_TCP {
+
+	public Medida sendData (Medida medida)
+	{
+		ObjectInputStream objInput;
+		ObjectOutputStream objOutput;
+        
+        Socket conectar;
+        
+        try 
+        {
+			conectar = new Socket("localhost", 9000);
+			System.out.println("conectado ao servidor na porta" );
+			
+			objOutput = new ObjectOutputStream(conectar.getOutputStream());
+			objInput = new ObjectInputStream(conectar.getInputStream());
+			
+			System.out.println("criados");
+			
+			//enviando pessoa para calcular imc
+			
+			objOutput.writeObject(medida);
+			System.out.println("enviado");
+			
+			// recebendo a resposta do servidor
+			medida = (Medida) objInput.readObject();
+			System.out.println("recebido");
+			
+			objInput.close();
+			objOutput.close();
+			conectar.close();
+			
+			return medida;
+			
+		} 
+        catch (Exception e) 
+        { 
+        	System.out.println("ERRO: " + e.getMessage());
+        	return null; 
+        	
+        }
+	}
+
+}
+

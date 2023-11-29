@@ -1,0 +1,18 @@
+
+public class Main {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		Medida medida = new Medida();
+		medida.setMph(145);
+		medida.setKmh(1,609);
+		
+		Client_UDP cliente_UDP = new Client_UDP();
+		medida = cliente_UDP.sendData(medida);
+		
+		System.out.println("o valor convertido é:" + medida.getValorConvertido());
+		
+	}
+
+}

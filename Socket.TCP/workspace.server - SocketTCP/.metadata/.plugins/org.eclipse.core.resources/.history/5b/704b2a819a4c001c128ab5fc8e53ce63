@@ -1,0 +1,28 @@
+import java.io.*;
+import java.net.Socket;
+
+public class Sockets 
+{
+	private final Socket socket;
+	private final BufferedReader receber;
+	private final PrintWriter enviar;
+	
+	public SocketCliente(Socket socket) throws IOException
+	{
+		this.socket = socket;
+		this.receber = new BufferedReader (new InputStreamReader(socket.getInputStream()));
+		this.enviar = new PrintWriter(socket.getOutputStream(), true);
+	}
+	
+	public String ReceberMensagem()
+	{
+		try { return receber.readLine();}
+		catch (Exception e) {return null;}
+	}
+	
+	public Boolean EniviarMensagem(String msg)
+	{
+		enviar.println(msg);
+		return !enviar.checkError();
+	}
+}

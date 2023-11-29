@@ -1,0 +1,3 @@
+INDEX VERSION 1.131+C:\Users\brendha\Desktop\programação\Sist_Distribuídos\Socket.TCP\workspace.client - SocketTCP\.metadata\.plugins\org.eclipse.jdt.core
+4267283917.index
+1759015411.index

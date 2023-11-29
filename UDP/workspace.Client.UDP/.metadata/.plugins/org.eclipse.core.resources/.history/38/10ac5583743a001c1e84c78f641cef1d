@@ -1,0 +1,72 @@
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+
+public class Client_UDP 
+{
+	DatagramSocket socketCliente;
+	public Medida sendData (Medida medida)
+	{
+		
+		try
+		{
+			
+			socketCliente = new DatagramSocket();
+			InetAddress IP = InetAddress.getByName("localhost");
+			byte[] sendData = new byte[256];
+			ByteArrayOutputStream arrayOtptStrm = new ByteArrayOutputStream();
+			ObjectOutputStream objOtptStrm = new ObjectOutputStream(arrayOtptStrm);
+			objOtptStrm.writeObject(medida);
+			sendData = arrayOtptStrm.toByteArray();
+			DatagramPacket sendPack = new DatagramPacket(sendData, sendData.length, IP, 9000);
+			
+			socketCliente.send(sendPack);
+			
+			System.out.println("\n==========================");
+		    System.out.println("Informações do Sistema:");
+		    System.out.println("--Dados enviados");			
+		    
+			return medida;
+			
+			
+		} catch (Exception e)
+		{
+			// TODO: handle exception
+			System.out.println("Erro ao enviar dados " + e.getMessage());
+			return null;
+		}
+		
+		
+	}
+	
+	public Medida reciveData (Medida medida)
+	{
+		try
+		{
+			byte[] answerData = new byte[256];
+			DatagramPacket answerPack = new DatagramPacket(answerData, answerData.length);
+			socketCliente.receive(answerPack);
+			
+			System.out.println("Resposta recebida...");
+			
+			ByteArrayInputStream arrayInptStrm = new ByteArrayInputStream(answerData);
+			ObjectInputStream objInptStrm = new ObjectInputStream(arrayInptStrm);
+			medida = new Medida();
+			medida = (Medida) objInptStrm.readObject();
+			
+			return medida;
+		} 
+		
+		catch (Exception e)
+		{
+			// TODO: handle exception
+			System.out.println("Erro ao enviar dados " + e.getMessage());
+			return null;
+		}
+	}
+	
+}
